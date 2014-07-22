@@ -1,0 +1,12 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+  Justin Welenofsky -- Lead Developer -- http://github.com/welenofsky/
+  Austin Stock -- UX/UI Designer -- http://austinharveystock.com/ 
+
+# TECHNOLOGY COLOPHON
+
+    HTML5, CSS3
+    Normalize.css, jQuery, Modernizr
