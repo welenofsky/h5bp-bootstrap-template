@@ -1,0 +1,22 @@
+{
+  "name": "h5bp-bootstrap",
+  "version": "0.0.0",
+  "homepage": "https://github.com/welenofsky/h5bp-bootstrap-template",
+  "authors": [
+    "Justin Welenofsky <welenofsky@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.4",
+    "jquery": "~1.11.3",
+    "fontawesome": "~4.3.0",
+    "modernizr": "~2.8.3"
+  }
+}
