@@ -78,8 +78,6 @@ gulp.task('scripts', [
 	'scripts:bootstrap',
 ]);
 
-
-
 gulp.task('scripts:jquery', function() {
 	// place code for your default task here
 	return gulp.src('./bower_components/jquery/dist/jquery.min.js')
