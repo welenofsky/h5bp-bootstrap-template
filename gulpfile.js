@@ -5,15 +5,30 @@ var del = require('del');
 var runSequence = require('run-sequence');
 var less = require('gulp-less');
 var path = require('path');
-var rename = require("gulp-rename");
+var rename = require('gulp-rename');
 var cleanCSS = require('gulp-clean-css');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
+var watch = require('gulp-watch');
 
 
 // Clean
-gulp.task('clean', function() {
-  return del(['js/vendor', './fonts', './css', './js/main.min.js', './js/main.js']);
+gulp.task('clean', [
+	'clean:js',
+	'clean:css',
+	'clean:fonts',
+]);
+
+gulp.task('clean:js', function(){
+	return del(['./js/vendor', './js/main.*js']);
+});
+
+gulp.task('clean:fonts', function(){
+	return del(['./fonts']);
+});
+
+gulp.task('clean:css', function(){
+	return del(['./css']);
 });
 
 gulp.task('default', function(callback) {
@@ -21,8 +36,7 @@ gulp.task('default', function(callback) {
 	// Going to be irrelevant with gulp 4.*
 	runSequence('clean',
 		['scripts', 'styles'],
-		'scripts:uglify',
-		// 'singleTask',
+		'compress',
 		callback);
 });
 
@@ -33,32 +47,33 @@ gulp.task('styles', [
 
 gulp.task('styles:fonts', function() {
 	// place code for your default task here
-	return gulp.src("./bower_components/fontawesome/fonts/*")
-		.pipe(gulp.dest("fonts"))
-  		.pipe(notify("Copied fontawesome fonts"));
+	return gulp.src('./bower_components/fontawesome/fonts/*')
+		.pipe(gulp.dest('fonts'))
 });
 
 gulp.task('styles:less', function () {
   return gulp.src('./less/__main.less')
     .pipe(less({
       paths: [ path.join(__dirname, 'less', 'includes') ]
-    }))
-    .pipe(cleanCSS())
+    }))   
+    .on('error', notify.onError(function (error) {
+        return 'LESS compilation failed: ' + error.message;
+	}))
     .pipe(rename('main.css'))
-    .pipe(gulp.dest('./css'));
+    .pipe(gulp.dest('./css'))
+    .pipe(notify('LESS compiled successfully!'));
 });
 
 gulp.task('scripts', [
 	'scripts:jquery',
 	'scripts:bootstrap',
-	// ...
 ]);
 
 gulp.task('scripts:jquery', function() {
 	// place code for your default task here
-	return gulp.src("./bower_components/jquery/dist/jquery.min.js")
-		.pipe(gulp.dest("js/vendor"))
-  		.pipe(notify("Copied <%= file.relative %>!"));
+	return gulp.src('./bower_components/jquery/dist/jquery.min.js')
+		.pipe(gulp.dest('js/vendor'))
+  		// .pipe(notify('Copied <%= file.relative %>!'));
 });
 
 gulp.task('scripts:bootstrap', function(){
@@ -80,21 +95,39 @@ gulp.task('scripts:bootstrap', function(){
 		.pipe(gulp.dest('./js'));
 });
 
-gulp.task('scripts:uglify', function(){
+gulp.task('compress', [
+	'compress:css',
+	'compress:js'
+]);
+
+gulp.task('compress:js', function(){
 	return gulp.src('./js/main.js')
 		.pipe(uglify())
+	    .on('error', notify.onError(function (error) {
+	        return 'Uglifying failed: ' + error.message;
+		}))
 		.pipe(rename('main.min.js'))
 		.pipe(gulp.dest('./js'))
 });
 
-/**
-// Build production files, the default task
-gulp.task('default', ['clean'], cb =>
-  runSequence(
-    'styles',
-    ['lint', 'html', 'scripts', 'images', 'copy'],
-    'generate-service-worker',
-    cb
-  )
-);
-**/
+gulp.task('compress:css', function(){
+	return gulp.src('css/*.css')
+		.pipe(cleanCSS())
+	    .on('error', notify.onError(function (error) {
+	        return 'CSS Minification failed: ' + error.message;
+		}))
+		.pipe(rename({
+			suffix: '.min'
+		}))
+		.pipe(gulp.dest('./css'))
+});
+
+gulp.task('watch', function(callback) {
+
+	// Watch .less files
+	gulp.watch('less/*.less', ['default']);
+
+	// Watch .js files
+	// gulp.watch('src/scripts/**/*.js', ['scripts']);
+
+});
