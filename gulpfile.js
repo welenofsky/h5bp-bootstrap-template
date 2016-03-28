@@ -45,6 +45,15 @@ gulp.task('styles', [
 	'styles:less'
 ]);
 
+// Used by gulp watch
+gulp.task('styles:refresh', function(callback){
+	runSequence(
+		'clean:css',
+		'styles:less',
+		'compress:css',
+		callback);
+});
+
 gulp.task('styles:fonts', function() {
 	// place code for your default task here
 	return gulp.src('./bower_components/fontawesome/fonts/*')
@@ -68,6 +77,8 @@ gulp.task('scripts', [
 	'scripts:jquery',
 	'scripts:bootstrap',
 ]);
+
+
 
 gulp.task('scripts:jquery', function() {
 	// place code for your default task here
@@ -125,7 +136,7 @@ gulp.task('compress:css', function(){
 gulp.task('watch', function(callback) {
 
 	// Watch .less files
-	gulp.watch('less/*.less', ['default']);
+	gulp.watch('less/*.less', ['styles:refresh']);
 
 	// Watch .js files
 	// gulp.watch('src/scripts/**/*.js', ['scripts']);
