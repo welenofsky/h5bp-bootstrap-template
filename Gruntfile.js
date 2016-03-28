@@ -33,7 +33,7 @@ module.exports = function(grunt) {
             },
             modenizer: {
                 nonull: true,
-                src: 'bower_components/modernizr/modernizr.js',
+                src: 'bower_components/modernizr/dist/modernizr-build.js',
                 dest: 'js/vendor/modernizr.js'
             },
         },
@@ -70,6 +70,23 @@ module.exports = function(grunt) {
                 dest: 'js/main.js'
             }
         },
+        modernizr: {
+            dist: {
+                "dest" : "js/modernizr-custom.js",
+                "parseFiles": true,
+                "customTests": [],
+                "devFile": "bower_components/modernizr/bin/modernizr",
+                "outputFile": "bower_components/modernizr/dist/modernizr-output.js",
+                "tests": [
+                    // Tests 
+                ],
+                "options": [
+                    "setClasses",
+                    "prefixedCSS",
+                ],
+                "uglify": true
+            }
+        },
         jshint: {
             bootstrap: {
                 options: {
@@ -99,6 +116,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks("grunt-modernizr");
     //grunt.loadNpmTasks('grunt-contrib-watch');
     // Load the plugin that provides the "jshint" task.
     grunt.loadNpmTasks('grunt-contrib-jshint');
